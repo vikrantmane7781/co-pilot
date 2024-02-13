@@ -16,7 +16,8 @@ const MenuHeaderWrapper = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   paddingRight: theme.spacing(4.5),
   transition: 'padding .25s ease-in-out',
-  minHeight: theme.mixins.toolbar.minHeight
+  minHeight: theme.mixins.toolbar.minHeight,
+  backgroundColor:'rgb(40 142 231)'
 }))
 
 const HeaderTitle = styled(Typography)(({ theme }) => ({
@@ -47,8 +48,8 @@ const VerticalNavHeader = props => {
       ) : (
         <Link href='/' passHref>
           <StyledLink>
-            <HeaderTitle variant='h6' sx={{ ml: 3 }}>
-              {themeConfig.templateName}
+            <HeaderTitle variant='h6' sx={{ ml: 9 }}>
+              {/*themeConfig.templateName*/}
             </HeaderTitle>
           </StyledLink>
         </Link>

@@ -25,16 +25,22 @@ const MenuNavLink = styled(ListItemButton)(({ theme }) => ({
   width: '100%',
   borderTopRightRadius: 100,
   borderBottomRightRadius: 100,
-  color: theme.palette.text.primary,
+ 
   padding: theme.spacing(2.25, 3.5),
   transition: 'opacity .25s ease-in-out',
   '&.active, &.active:hover': {
     boxShadow: theme.shadows[3],
-    backgroundImage: `linear-gradient(98deg, ${theme.palette.customColors.primaryGradient}, ${theme.palette.primary.main} 94%)`
+    backgroundImage: `linear-gradient(98deg, white, white 94%)`
   },
   '&.active .MuiTypography-root, &.active .MuiSvgIcon-root': {
-    color: `${theme.palette.common.white} !important`
+    color: `${theme.palette.common.black} !important`
+  },
+  '&:not(.active)': {
+    '& .MuiTypography-root': {
+      color: 'white'
+    }
   }
+  
 }))
 
 const MenuItemTextMetaWrapper = styled(Box)({
@@ -88,15 +94,25 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }) => {
           <ListItemIcon
             sx={{
               mr: 2.5,
-              color: 'text.primary',
-              transition: 'margin .25s ease-in-out'
+              color: 'black',
+              transition: 'margin .25s ease-in-out',
+              backgroundColor: 'white',
+              boxShadow:  '0px 2px 4px rgb(117 97 97 / 70%)',
+              borderRadius: '50%',
+              minWidth: '36px', /* Adjust as needed */
+              minHeight: '36px', /* Adjust as needed */
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <UserIcon icon={IconTag} />
           </ListItemIcon>
 
           <MenuItemTextMetaWrapper>
-            <Typography {...(themeConfig.menuTextTruncate && { noWrap: true })}>{item.title}</Typography>
+            <Typography 
+            
+            {...(themeConfig.menuTextTruncate && { noWrap: true })}>{item.title}</Typography>
             {item.badgeContent ? (
               <Chip
                 label={item.badgeContent}

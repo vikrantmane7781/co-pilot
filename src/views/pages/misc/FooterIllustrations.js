@@ -9,7 +9,7 @@ import { styled, useTheme } from '@mui/material/styles'
 const MaskImg = styled('img')(() => ({
   bottom: 0,
   zIndex: -1,
-  width: '100%',
+  width: '50%',
   position: 'absolute'
 }))
 

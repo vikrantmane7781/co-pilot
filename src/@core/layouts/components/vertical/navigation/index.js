@@ -92,7 +92,7 @@ const Navigation = props => {
           )} 95%,${hexToRGBA(theme.palette.background.default, 0.05)})`
         }}
       />
-      <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
+      <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden',backgroundColor:'rgb(40 142 231);' }}>
         <ScrollWrapper
           {...(hidden
             ? {

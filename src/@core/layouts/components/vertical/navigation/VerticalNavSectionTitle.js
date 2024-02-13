@@ -21,6 +21,7 @@ const TypographyHeaderText = styled(Typography)(({ theme }) => ({
   letterSpacing: '0.21px',
   textTransform: 'uppercase',
   color: theme.palette.text.disabled,
+  backgroundColor:'rgba(0, 112, 210, 1)',
   fontWeight: theme.typography.fontWeightMedium
 }))
 
@@ -40,7 +41,8 @@ const VerticalNavSectionTitle = props => {
         color: theme.palette.text.disabled,
         '& .MuiDivider-root:before, & .MuiDivider-root:after, & hr': {
           borderColor: `rgba(${theme.palette.customColors.main}, 0.12)`
-        }
+        },
+  
       }}
     >
       <Divider

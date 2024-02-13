@@ -14,7 +14,7 @@ import ModeToggler from 'src/@core/layouts/components/shared-components/ModeTogg
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 
-const AppBarContent = props => {
+const AppBarContent = props => { 
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
