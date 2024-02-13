@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
-
+import Logo from "./Logo"
 // ** Styled Components
 const MenuHeaderWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -48,8 +48,8 @@ const VerticalNavHeader = props => {
       ) : (
         <Link href='/' passHref>
           <StyledLink>
-            <HeaderTitle variant='h6' sx={{ ml: 9 }}>
-              {/*themeConfig.templateName*/}
+            <HeaderTitle variant='h6' sx={{ ml: 9,mt:5 }}>
+              <Logo />
             </HeaderTitle>
           </StyledLink>
         </Link>
