@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import { styled } from '@mui/material/styles';
 
 // Dummy JSON data
 const dummyData = [
@@ -88,30 +89,34 @@ const TableStickyHeader = () => {
   const handleRadioChange = (name) => {
     setSelectedRow(name);
   };
-
+  const CustomTableSortLabel = styled(TableSortLabel)({
+    // Ensure the sort icon is always visible
+    '& .MuiTableSortLabel-icon': {
+      opacity: 1,
+    },
+  });
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
           <TableRow>
-              {columns.map((column) => (
+          {columns.map((column, index) => (
                 <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : 'asc'}
-                    onClick={() => handleRequestSort(column.id)}
-                    sx={{
-                      '&:hover': {
-                        color: 'primary.main', // Change color on hover
-                      },
-                      // Add more custom styles here as needed
-                    }}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
+                  {index === 0 ? (
+                    // Render empty cell for the first column
+                    <div />
+                  ) : (
+                    <CustomTableSortLabel
+                      active={orderBy === column.id}
+                      direction={orderBy === column.id ? order : 'asc'}
+                      onClick={() => handleRequestSort(column.id)}
+                    >
+                      {column.label}
+                    </CustomTableSortLabel>
+                  )}
+              </TableCell>
+            ))}
             </TableRow>
           </TableHead>
           <TableBody>
