@@ -19,13 +19,16 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
+import LinearProgress from '@mui/material/LinearProgress'; // Import LinearProgress
+import Box from '@mui/material/Box';
 
-
+import { useTheme } from '@mui/material/styles';
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
 })
 
 const FormLayoutsSeparator = () => {
+  const theme = useTheme();
   // ** States
   const [language, setLanguage] = useState([])
   const [date, setDate] = useState(null)
@@ -82,26 +85,53 @@ const FormLayoutsSeparator = () => {
     event.stopPropagation(); // Prevent the click event from propagating to the Select component
   };
 
+  const [loading, setLoading] = useState(false); // Step 2
+
+  const handleBuildRAG = () => {
+    setLoading(true); // Step 3
+
+    // Simulate asynchronous operation (e.g., API request) for a few seconds
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
+
   return (
     <Card>
-      <CardHeader title=' ' titleTypographyProps={{ variant: 'h6' }} />
-      <Divider sx={{ margin: 0 }} />
+      
+      <CardHeader title={loading? `Creating Project please wait`:`New Project`} titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>
+        {
+          loading?(
+            <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+        </Box>
+          ):(null)
+        }
+        <Divider sx={{ margin: 0 }} />
+      
       <form onSubmit={e => e.preventDefault()}>
-        <CardContent>
+        <CardContent style={{ filter: loading ? 'blur(4px)' : 'none' }}>
         <Grid container spacing={10}>
           <Grid item xs={6} sm={12}>
             <TextField 
-               sx={{ width: '50%', marginLeft: '20px' }}
+               sx={{ width: '50%', marginLeft: '20px',
+               '& .MuiFormLabel-root': {
+                color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
+              }  }}
               required 
               id="outlined-required" 
               label="Project Name" 
               placeholder="Please enter project name.."
               autoComplete="off"
+              
             />
           </Grid>
           <Grid item xs={6} sm={12}>
           <TextField 
-              sx={{ width: '50%', marginLeft: '20px' }}
+              sx={{ width: '50%', marginLeft: '20px' ,
+              '& .MuiFormLabel-root': {
+                color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
+              } }}
               required 
               id="outlined-error-helper-text"
               label="Project Description" 
@@ -111,7 +141,10 @@ const FormLayoutsSeparator = () => {
           </Grid>
           <Grid item xs={6} sm={12}>
               <InputLabel id="multi-select-label"
-              sx={{ width: '50%', marginLeft: '20px' }}
+              sx={{ width: '50%', marginLeft: '20px',
+              '& .MuiFormLabel-root': {
+                color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
+              }  }}
               >Select Technologies</InputLabel>
               <Select
                 sx={{ width: '50%', marginLeft: '20px' }}
@@ -129,6 +162,11 @@ const FormLayoutsSeparator = () => {
                         label={option}
                         onDelete={handleRemoveOption(option)}
                         onMouseDown={handleChipClick} // Prevent the select box from opening when clicking on the chip button
+                        sx={{
+                          color: theme.palette.mode === 'dark' ? 'white' : 'black', // Chip label color
+                          backgroundColor: theme.palette.mode === 'dark' ? 'rgb(207 207 207 / 17%);' : 'white', // Chip background color
+                          border: `1px solid ${theme.palette.mode === 'dark' ? 'white' : 'rgb(207 207 207 / 87%);'}`, // Chip border color
+                        }}
                       />
                     ))}
                   </div>
@@ -143,7 +181,10 @@ const FormLayoutsSeparator = () => {
           </Grid>
           <Grid item xs={6} sm={12}>
           <TextField 
-              sx={{ width: '50%', marginLeft: '20px' }}
+              sx={{ width: '50%', marginLeft: '20px',
+              '& .MuiFormLabel-root': {
+                color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
+              }  }}
               required 
               id="outlined-error-helper-text"
               label="GitHub Repo" 
@@ -158,11 +199,12 @@ const FormLayoutsSeparator = () => {
         </CardContent>
         <Divider sx={{ margin: 0 }} />
         <CardActions>
-          <Button size='large' type='submit' sx={{ ml: 7 }} variant='contained'>
+          <Button size='large' type='submit' onClick={handleBuildRAG} sx={{ ml: 7 }} variant='contained'>
             Build RAG
           </Button>
           
         </CardActions>
+       
       </form>
     </Card>
   )

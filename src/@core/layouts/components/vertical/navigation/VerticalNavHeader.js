@@ -48,7 +48,7 @@ const VerticalNavHeader = props => {
       ) : (
         <Link href='/' passHref>
           <StyledLink>
-            <HeaderTitle variant='h6' sx={{ ml: 9,mt:5 }}>
+            <HeaderTitle variant='h6' sx={{ ml: 9,mt:5,mb:10 }}>
               <Logo />
             </HeaderTitle>
           </StyledLink>

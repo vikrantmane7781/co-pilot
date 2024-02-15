@@ -15,13 +15,13 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
 import Table from 'src/views/dashboard/Table'
-
+import FormLayoutsSeparator from 'src/views/form-layouts/FormLayoutsSeparator'
 const Dashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Table />
+        <FormLayoutsSeparator />
         </Grid>
       </Grid>
     </ApexChartWrapper>

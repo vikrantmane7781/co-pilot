@@ -28,8 +28,8 @@ const columns = [
   { id: 'radio', label: '', minWidth: 5 },
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'tech', label: 'Technologies', minWidth: 30 },
-  { id: 'description', label: 'Description', minWidth: 170, align: 'left' },
-  { id: 'crdate', label: 'Created Date', minWidth: 170, align: 'left' },
+  { id: 'description', label: 'Created Date', minWidth: 170, align: 'left' },
+  { id: 'crdate', label: 'Created By', minWidth: 170, align: 'left' },
 ];
 
 const CollapsibleRow = ({ row, selectedRow, handleRadioChange }) => {
@@ -70,6 +70,7 @@ const TableStickyHeader = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -89,19 +90,39 @@ const TableStickyHeader = () => {
   const handleRadioChange = (name) => {
     setSelectedRow(name);
   };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredData = dummyData.filter(
+    (row) =>
+      row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.tech.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.crdate.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const CustomTableSortLabel = styled(TableSortLabel)({
     // Ensure the sort icon is always visible
     '& .MuiTableSortLabel-icon': {
       opacity: 1,
     },
   });
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-          <TableRow>
-          {columns.map((column, index) => (
+            <TableRow>
+              {columns.map((column, index) => (
                 <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
                   {index === 0 ? (
                     // Render empty cell for the first column
@@ -115,12 +136,12 @@ const TableStickyHeader = () => {
                       {column.label}
                     </CustomTableSortLabel>
                   )}
-              </TableCell>
-            ))}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyData
+            {filteredData
               .sort((a, b) => {
                 const isAsc = order === 'asc';
                 return isAsc ? a[orderBy].localeCompare(b[orderBy]) : b[orderBy].localeCompare(a[orderBy]);
@@ -140,7 +161,7 @@ const TableStickyHeader = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={dummyData.length}
+        count={filteredData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
