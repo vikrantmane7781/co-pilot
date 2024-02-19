@@ -128,7 +128,7 @@ const TableStickyHeader = () => {
             value={searchQuery}
             onChange={handleSearchChange}
             size="small" // Reduce the size of the search bar
-            sx={{ width: '70%' }} // Adjust the width of the search bar
+            sx={{ width: '90%' }} // Adjust the width of the search bar
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -195,7 +195,7 @@ const TableStickyHeader = () => {
             size="medium"
             type="submit"
             variant="contained"
-            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'12%' }}
+            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'5%' }}
           >
             Select Project
           </Button>
