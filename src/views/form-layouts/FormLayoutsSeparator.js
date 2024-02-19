@@ -35,9 +35,7 @@ import Paper from '@mui/material/Paper';
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
 })
-const ZoomedComponent = styled('div')({
 
-});
 
 const StickyHeaderCard = styled(Card)({
   overflowY: 'auto',
@@ -48,16 +46,30 @@ const StickyHeader = styled(CardHeader)({
   position: 'sticky',
   top: 0,
   zIndex: 1000, // Adjust the z-index as needed
-  backgroundColor: 'white', // Set background color here
+ 
+});
+
+const StickyTableCell = styled(TableCell)({
+  position: 'sticky',
+  left: 0,
+  zIndex: 1000, // Adjust the z-index as needed
+ 
+});
+const TechBox = styled(Box)({
+  display: 'inline-block',
+  padding: '4px 8px', // Adjust padding as needed
+  marginRight: '8px', // Adjust margin as needed
+  border: '1px solid #ccc', // Add border
+  borderRadius: '4px', // Add border radius
 });
 const FormLayoutsSeparator = () => {
   
   const theme = useTheme();
   // ** States
   const rows = [
-    { id: "Internet Banking Application", name: 'John Doe', age: 30, city: 'New York' },
-    { id: "Road Detection System", name: 'Jane Smith', age: 25, city: 'Los Angeles' },
-    { id: "Event Management", name: 'Mike Johnson', age: 40, city: 'Chicago' },
+    { id: "Internet Banking Application",  name: ['Java','python','typescript'], age: 30, city: 'New York' },
+    { id: "Road Detection System", name: ['Java','python','typescript'], age: 25, city: 'Los Angeles' },
+    { id: "Event Management",  name: ['Java','python','typescript'] , age: 40, city: 'Chicago' },
   ];
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -88,7 +100,7 @@ const FormLayoutsSeparator = () => {
   return (
  
     <>
-    <Card>
+    <Card sx={{padding:'25px'}}>
       
       <CardHeader title={loading? `Creating Project please wait`:`New Project`} titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>
         {
@@ -100,7 +112,6 @@ const FormLayoutsSeparator = () => {
         }
         <Divider sx={{ margin: 0 }} />
       
-      <ZoomedComponent>
       <form onSubmit={e => e.preventDefault()}>
         <CardContent style={{ filter: loading ? 'blur(4px)' : 'none' }}>
         <Grid container spacing={7}>
@@ -159,7 +170,7 @@ const FormLayoutsSeparator = () => {
                 renderValue={(selected) => (
                   <div>
                     {selected.map((option) => (
-                      <ZoomedChip
+                      <Chip
                         key={option}
                         label={option}
                         onDelete={handleRemoveOption(option)}
@@ -175,9 +186,9 @@ const FormLayoutsSeparator = () => {
                   </div>
                 )}
               >
-                <MenuItem value="option1">Option 1</MenuItem>
-                <MenuItem value="option2">Option 2</MenuItem>
-                <MenuItem value="option3">Option 3</MenuItem>
+                <MenuItem value="option1">Java</MenuItem>
+                <MenuItem value="option2">Python</MenuItem>
+                <MenuItem value="option3">C++</MenuItem>
                 {/* Add more MenuItem components for additional options */}
               </Select>
 
@@ -216,10 +227,10 @@ const FormLayoutsSeparator = () => {
         </CardContent>
       
       </form>
-      </ZoomedComponent>
+     
     </Card>
     
-    <StickyHeaderCard sx={{mt:2,height: '30vh',overflowY: 'auto'}}>
+    <StickyHeaderCard sx={{mt:2,height: '50vh',overflowY: 'auto',padding:'25px'}}>
       
      <StickyHeader title="Recent created projects.." titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>
      <Divider sx={{ margin: 0 }} />
@@ -227,17 +238,21 @@ const FormLayoutsSeparator = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Project Name & Description</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Technologies</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Created On</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Created By</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold',width: '450px' }}>Project Name & Description</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' }}>Technologies</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap'}}>Created On</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap'}}>Created By</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell style={{ color: '#0070D2',fontSize: '14px' }}>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
+              <StickyTableCell style={{ color: '#0070D2', fontSize: '14px' }}>{row.id}</StickyTableCell>
+              <TableCell>
+                  <TechBox>
+                    {row.name.join(' | ')}
+                  </TechBox>
+                </TableCell>
               <TableCell>{row.age}</TableCell>
               <TableCell>{row.city}</TableCell>
             </TableRow>
