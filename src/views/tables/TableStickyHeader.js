@@ -14,7 +14,11 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from 'mdi-material-ui/Magnify';
 
 // Dummy JSON data
 const dummyData = [
@@ -31,6 +35,10 @@ const columns = [
   { id: 'description', label: 'Created Date', minWidth: 170, align: 'left' },
   { id: 'crdate', label: 'Created By', minWidth: 170, align: 'left' },
 ];
+
+const BlueTableCell = styled(TableCell)({
+  color: '#0070D2',
+});
 
 const CollapsibleRow = ({ row, selectedRow, handleRadioChange }) => {
   const [open, setOpen] = useState(false);
@@ -112,18 +120,31 @@ const TableStickyHeader = () => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
+      <Grid container alignItems="center" justifyContent="flex-end" padding={3}> {/* Align the items to the right */}
+        <Grid item xs={4}>
+          <TextField
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            size="small" // Reduce the size of the search bar
+            sx={{ width: '70%' }} // Adjust the width of the search bar
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               {columns.map((column, index) => (
-                <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
+                <BlueTableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
                   {index === 0 ? (
                     // Render empty cell for the first column
                     <div />
@@ -136,7 +157,7 @@ const TableStickyHeader = () => {
                       {column.label}
                     </CustomTableSortLabel>
                   )}
-                </TableCell>
+                </BlueTableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -168,10 +189,17 @@ const TableStickyHeader = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <Divider sx={{ margin: 0 }} />
-      <CardActions>
-        <Button size="medium" type="submit" sx={{ mr: 2 }} variant="contained">
-          Select Project
-        </Button>
+      <CardActions >
+      <Grid container justifyContent="flex-end">
+          <Button
+            size="medium"
+            type="submit"
+            variant="contained"
+            style={{ backgroundColor: '#0070D2', color: 'white' }}
+          >
+            Select Project
+          </Button>
+      </Grid>
       </CardActions>
     </Paper>
   );

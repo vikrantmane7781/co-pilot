@@ -199,7 +199,12 @@ const FormLayoutsSeparator = () => {
         </CardContent>
         <Divider sx={{ margin: 0 }} />
         <CardActions>
-          <Button size='large' type='submit' onClick={handleBuildRAG} sx={{ ml: 7 }} variant='contained'>
+          <Button size='large'
+           type='submit' 
+           onClick={handleBuildRAG} 
+           sx={{ ml: 7 }} 
+           variant='contained'
+           style={{ backgroundColor: '#0070D2', color: 'white' }}>
             Build RAG
           </Button>
           
