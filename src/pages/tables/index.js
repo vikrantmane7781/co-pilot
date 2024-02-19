@@ -16,7 +16,7 @@ const MUITable = () => {
 
         <Card>
           <Link href='#'>
-          <CardHeader title={`Repositories`} titleTypographyProps={{ variant: 'h6' }} />
+          <CardHeader title={`Repositories`} sx={{ml:"20px"}}titleTypographyProps={{ variant: 'h6' }} />
           </Link>
           
       <Divider sx={{ margin: 0 }} />

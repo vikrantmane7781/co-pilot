@@ -21,8 +21,11 @@ import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress'; // Import LinearProgress
 import Box from '@mui/material/Box';
-
+import TableContainer from '@mui/material/TableContainer'
 import { useTheme } from '@mui/material/styles';
+
+
+
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
 })
@@ -97,6 +100,7 @@ const FormLayoutsSeparator = () => {
   };
 
   return (
+    <>
     <Card>
       
       <CardHeader title={loading? `Creating Project please wait`:`New Project`} titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>
@@ -111,7 +115,7 @@ const FormLayoutsSeparator = () => {
       
       <form onSubmit={e => e.preventDefault()}>
         <CardContent style={{ filter: loading ? 'blur(4px)' : 'none' }}>
-        <Grid container spacing={10}>
+        <Grid container spacing={7}>
           <Grid item xs={6} sm={12}>
             <TextField 
                sx={{ width: '50%', marginLeft: '20px',
@@ -212,6 +216,7 @@ const FormLayoutsSeparator = () => {
        
       </form>
     </Card>
+      </>
   )
 }
 

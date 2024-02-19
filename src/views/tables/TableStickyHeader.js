@@ -19,6 +19,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from 'mdi-material-ui/Magnify';
+import SendIcon from 'mdi-material-ui/Send';
 
 // Dummy JSON data
 const dummyData = [
@@ -29,11 +30,11 @@ const dummyData = [
 ];
 
 const columns = [
-  { id: 'radio', label: '', minWidth: 5 },
-  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'radio', label: '', minWidth: 2 },
+  { id: 'name', label: 'Project Name & Description', minWidth: 170 },
   { id: 'tech', label: 'Technologies', minWidth: 30 },
-  { id: 'description', label: 'Created Date', minWidth: 170, align: 'left' },
-  { id: 'crdate', label: 'Created By', minWidth: 170, align: 'left' },
+  { id: 'description', label: 'Created Date', minWidth: 100, align: 'left' },
+  { id: 'crdate', label: 'Created By', minWidth: 100, align: 'left' },
 ];
 
 const BlueTableCell = styled(TableCell)({
@@ -71,7 +72,13 @@ const CollapsibleRow = ({ row, selectedRow, handleRadioChange }) => {
     </>
   );
 };
-
+const ChatMessage = ({ message, isUser }) => (
+  <div style={{ textAlign: isUser ? 'right' : 'left', margin: '10px 0' }}>
+    <Typography variant="body1" style={{ backgroundColor: isUser ? '#0070D2' : '#F5F5F5', color: isUser ? 'white' : 'black', padding: '10px', borderRadius: '10px', display: 'inline-block' }}>
+      {message}
+    </Typography>
+  </div>
+);
 const TableStickyHeader = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -79,6 +86,8 @@ const TableStickyHeader = () => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [searchQuery, setSearchQuery] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [userMessage, setUserMessage] = useState('');
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -103,6 +112,14 @@ const TableStickyHeader = () => {
     setSearchQuery(event.target.value);
   };
 
+
+  const handleSendMessage = () => {
+    if (userMessage.trim() !== '') {
+      setChatMessages([...chatMessages, { message: userMessage, isUser: true }]);
+      setUserMessage('');
+      // You can add logic here to handle AI response and update chatMessages accordingly
+    }
+  };
   const filteredData = dummyData.filter(
     (row) =>
       row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -195,12 +212,15 @@ const TableStickyHeader = () => {
             size="medium"
             type="submit"
             variant="contained"
-            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'5%' }}
+            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'%' }}
           >
             Select Project
           </Button>
       </Grid>
       </CardActions>
+      {chatMessages.map((message, index) => (
+        <ChatMessage key={index} message={message.message} isUser={message.isUser} />
+      ))}
     </Paper>
   );
 };
