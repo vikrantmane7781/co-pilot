@@ -195,7 +195,7 @@ const TableStickyHeader = () => {
             size="medium"
             type="submit"
             variant="contained"
-            style={{ backgroundColor: '#0070D2', color: 'white' }}
+            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'12%' }}
           >
             Select Project
           </Button>
