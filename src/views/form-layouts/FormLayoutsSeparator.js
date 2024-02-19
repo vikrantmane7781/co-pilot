@@ -23,56 +23,42 @@ import LinearProgress from '@mui/material/LinearProgress'; // Import LinearProgr
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer'
 import { useTheme } from '@mui/material/styles';
-
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
 })
+const ZoomedComponent = styled('div')({
 
+});
+
+const StickyHeaderCard = styled(Card)({
+  overflowY: 'auto',
+  position: 'relative',
+});
+
+const StickyHeader = styled(CardHeader)({
+  position: 'sticky',
+  top: 0,
+  zIndex: 1000, // Adjust the z-index as needed
+  backgroundColor: 'white', // Set background color here
+});
 const FormLayoutsSeparator = () => {
+  
   const theme = useTheme();
   // ** States
-  const [language, setLanguage] = useState([])
-  const [date, setDate] = useState(null)
-
-  const [values, setValues] = useState({
-    password: '',
-    password2: '',
-    showPassword: false,
-    showPassword2: false
-  })
-
-  // Handle Password
-  const handlePasswordChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault()
-  }
-
-  // Handle Confirm Password
-  const handleConfirmChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleClickShowConfirmPassword = () => {
-    setValues({ ...values, showPassword2: !values.showPassword2 })
-  }
-
-  const handleMouseDownConfirmPassword = event => {
-    event.preventDefault()
-  }
-
-  // Handle Select
-  const handleSelectChange = event => {
-    setLanguage(event.target.value)
-  }
+  const rows = [
+    { id: "Internet Banking Application", name: 'John Doe', age: 30, city: 'New York' },
+    { id: "Road Detection System", name: 'Jane Smith', age: 25, city: 'Los Angeles' },
+    { id: "Event Management", name: 'Mike Johnson', age: 40, city: 'Chicago' },
+  ];
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleChange = (event) => {
@@ -100,6 +86,7 @@ const FormLayoutsSeparator = () => {
   };
 
   return (
+ 
     <>
     <Card>
       
@@ -113,15 +100,20 @@ const FormLayoutsSeparator = () => {
         }
         <Divider sx={{ margin: 0 }} />
       
+      <ZoomedComponent>
       <form onSubmit={e => e.preventDefault()}>
         <CardContent style={{ filter: loading ? 'blur(4px)' : 'none' }}>
         <Grid container spacing={7}>
           <Grid item xs={6} sm={12}>
             <TextField 
-               sx={{ width: '50%', marginLeft: '20px',
+               sx={{ width: '90%', marginLeft: '20px',
                '& .MuiFormLabel-root': {
                 color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
-              }  }}
+              },
+              '& .MuiInputLabel-asterisk': {
+                color: 'red', // Change the color of the asterisk here
+              }  
+            }}
               required 
               id="outlined-required" 
               label="Project Name" 
@@ -132,10 +124,14 @@ const FormLayoutsSeparator = () => {
           </Grid>
           <Grid item xs={6} sm={12}>
           <TextField 
-              sx={{ width: '50%', marginLeft: '20px' ,
+              sx={{ width: '90%', marginLeft: '20px' ,
               '& .MuiFormLabel-root': {
                 color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
-              } }}
+              },
+              '& .MuiInputLabel-asterisk': {
+                color: 'red', // Change the color of the asterisk here
+              }
+             }}
               required 
               id="outlined-error-helper-text"
               label="Project Description" 
@@ -145,13 +141,15 @@ const FormLayoutsSeparator = () => {
           </Grid>
           <Grid item xs={6} sm={12}>
               <InputLabel id="multi-select-label"
-              sx={{ width: '50%', marginLeft: '20px',
+              sx={{ width: '90%', marginLeft: '20px',
               '& .MuiFormLabel-root': {
                 color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
-              }  }}
-              >Select Technologies</InputLabel>
+              } ,
+              
+             }}
+              >Select Technologies<span style={{ color: 'red' }}>*</span></InputLabel>
               <Select
-                sx={{ width: '50%', marginLeft: '20px' }}
+                sx={{ width: '90%', marginLeft: '20px' }}
                 labelId="multi-select-label"
                 id="multi-select"
                 multiple
@@ -161,7 +159,7 @@ const FormLayoutsSeparator = () => {
                 renderValue={(selected) => (
                   <div>
                     {selected.map((option) => (
-                      <Chip
+                      <ZoomedChip
                         key={option}
                         label={option}
                         onDelete={handleRemoveOption(option)}
@@ -169,7 +167,8 @@ const FormLayoutsSeparator = () => {
                         sx={{
                           color: theme.palette.mode === 'dark' ? 'white' : 'black', // Chip label color
                           backgroundColor: theme.palette.mode === 'dark' ? 'rgb(207 207 207 / 17%);' : 'white', // Chip background color
-                          border: `1px solid ${theme.palette.mode === 'dark' ? 'white' : 'rgb(207 207 207 / 87%);'}`, // Chip border color
+                          border: `1px solid ${theme.palette.mode === 'dark' ? 'white' : 'rgb(207 207 207 / 87%);'}`, // Chip border color,
+                          fontSize: '0.9rem',
                         }}
                       />
                     ))}
@@ -185,10 +184,14 @@ const FormLayoutsSeparator = () => {
           </Grid>
           <Grid item xs={6} sm={12}>
           <TextField 
-              sx={{ width: '50%', marginLeft: '20px',
+              sx={{ width: '90%', marginLeft: '20px',
               '& .MuiFormLabel-root': {
                 color: theme.palette.mode === 'dark' ? 'white' : 'black', // Input label color
-              }  }}
+              },
+              '& .MuiInputLabel-asterisk': {
+                color: 'red', // Change the color of the asterisk here
+              }
+              }}
               required 
               id="outlined-error-helper-text"
               label="GitHub Repo" 
@@ -199,24 +202,52 @@ const FormLayoutsSeparator = () => {
           
         </Grid>
 
-
-        </CardContent>
-        <Divider sx={{ margin: 0 }} />
         <CardActions>
           <Button size='large'
            type='submit' 
            onClick={handleBuildRAG} 
-           sx={{ ml: 7 }} 
+           sx={{ ml: 0 }} 
            variant='contained'
            style={{ backgroundColor: '#0070D2', color: 'white' }}>
             Build RAG
           </Button>
           
         </CardActions>
-       
+        </CardContent>
+      
       </form>
+      </ZoomedComponent>
     </Card>
-      </>
+    
+    <StickyHeaderCard sx={{mt:2,height: '30vh',overflowY: 'auto'}}>
+      
+     <StickyHeader title="Recent created projects.." titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>
+     <Divider sx={{ margin: 0 }} />
+     <TableContainer component={Paper} sx={{ paddingLeft: '25px', paddingRight: '25px' }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Project Name & Description</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Technologies</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Created On</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '20px', fontWeight: 'bold' }}>Created By</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell style={{ color: '#0070D2',fontSize: '14px' }}>{row.id}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.age}</TableCell>
+              <TableCell>{row.city}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </StickyHeaderCard>
+    </>
+     
   )
 }
 
