@@ -238,10 +238,10 @@ const FormLayoutsSeparator = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold',width: '450px' }}>Project Name & Description</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' }}>Technologies</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap'}}>Created On</TableCell>
-            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap'}}>Created By</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold',width: '450px',textAlign: 'left'  }}>Project Name & Description</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold',textAlign: 'left'  }}>Technologies</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap',textAlign: 'left' }}>Created On</TableCell>
+            <TableCell sx={{ color: '#0070D2',fontSize: '15px !important', fontWeight: 'bold' ,width: '150px', whiteSpace: 'nowrap',textAlign: 'left' }}>Created By</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

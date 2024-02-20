@@ -20,33 +20,47 @@ import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from 'mdi-material-ui/Magnify';
 import SendIcon from 'mdi-material-ui/Send';
+import Box from '@mui/material/Box';
 
 // Dummy JSON data
 const dummyData = [
-  { id: 1, name: 'Item 1', tech: 'Tech 1', description: 'Description 1', crdate: 'Date 1' },
-  { id: 2, name: 'Item 2', tech: 'Tech 2', description: 'Description 2', crdate: 'Date 2' },
-  { id: 3, name: 'Item 3', tech: 'Tech 3', description: 'Description 3', crdate: 'Date 3' },
+  { name: "Internet Banking Application",  tech: ['Java','python','typescript'], createdOn: 30, createdBy: 'New York' },
+  { name: "Road Detection System", tech: ['Java','python','typescript'], createdOn: 25, createdBy: 'Los Angeles' },
+  { name: "Event Management",  tech: ['Java','python','typescript'] , createdOn: 40, createdBy: 'Chicago' },
   // Add more dummy data as needed
 ];
 
 const columns = [
   { id: 'radio', label: '', minWidth: 2 },
-  { id: 'name', label: 'Project Name & Description', minWidth: 170 },
-  { id: 'tech', label: 'Technologies', minWidth: 30 },
-  { id: 'description', label: 'Created Date', minWidth: 100, align: 'left' },
-  { id: 'crdate', label: 'Created By', minWidth: 100, align: 'left' },
+  { id: 'name', label: 'Project Name & Description', minWidth: '150' },
+  { id: 'tech', label: 'Technologies', minWidth: '150' },
+  { id: 'description', label: 'Created Date', minWidth: '70', align: 'left' },
+  { id: 'crdate', label: 'Created By', minWidth: '70', align: 'left' },
 ];
 
 const BlueTableCell = styled(TableCell)({
   color: '#0070D2',
+  fontSize: '14px !important',
+  ontWeight: 'bold'
+});
+
+const TechBox = styled(Box)({
+  display: 'inline-block',
+  padding: '4px 8px', // Adjust padding as needed
+  marginRight: '8px', // Adjust margin as needed
+  border: '1px solid #ccc', // Add border
+  borderRadius: '4px', // Add border radius
 });
 
 const CollapsibleRow = ({ row, selectedRow, handleRadioChange }) => {
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => {
-    setOpen(!open);
+    setOpen(false);
+    //setOpen(!open);
   };
+
+  
 
   return (
     <>
@@ -57,15 +71,17 @@ const CollapsibleRow = ({ row, selectedRow, handleRadioChange }) => {
             onChange={() => handleRadioChange(row.name)}
           />
         </TableCell>
-        <TableCell>{row.name}</TableCell>
-        <TableCell>{row.tech}</TableCell>
-        <TableCell>{row.description}</TableCell>
-        <TableCell>{row.crdate}</TableCell>
+        <TableCell style={{ color: '#0070D2', fontSize: '14px' }}>{row.name}</TableCell>
+        <TableCell>  <TechBox>
+                    {row.tech.join(' | ')}
+                  </TechBox></TableCell>
+        <TableCell>{row.createdOn}</TableCell>
+        <TableCell>{row.createdBy}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Typography>{row.description}</Typography>
+            <Typography>{row.name}</Typography>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -123,11 +139,17 @@ const TableStickyHeader = () => {
   const filteredData = dummyData.filter(
     (row) =>
       row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      row.tech.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      row.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      row.crdate.toLowerCase().includes(searchQuery.toLowerCase())
+      row.tech.join(' ').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.createdOn.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.createdBy.toString().toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+  const handleSelectProject = () => {
+    // Retrieve the selected row data
+    const selectedRowData = dummyData.find((row) => row.name === selectedRow);
+    console.log(" ----- ",selectedRowData);
+    // Store the selected row data in session storage
+    sessionStorage.setItem('selectedRowData', JSON.stringify(selectedRowData));
+  };
   const CustomTableSortLabel = styled(TableSortLabel)({
     // Ensure the sort icon is always visible
     '& .MuiTableSortLabel-icon': {
@@ -213,14 +235,13 @@ const TableStickyHeader = () => {
             type="submit"
             variant="contained"
             style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'%' }}
+            onClick={handleSelectProject} 
           >
             Select Project
           </Button>
       </Grid>
       </CardActions>
-      {chatMessages.map((message, index) => (
-        <ChatMessage key={index} message={message.message} isUser={message.isUser} />
-      ))}
+     
     </Paper>
   );
 };
