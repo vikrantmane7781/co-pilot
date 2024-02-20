@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField'
-import IconButton from 'mdi-material-ui/SimpleIcons';
-import SendIcon from 'mdi-material-ui/Send';
+
+import SendIcon from 'mdi-material-ui/SendCircle';
 import Box from '@mui/material/Box';
 
 const ChatInput = ({ onSubmit }) => {
-    const [query, setQuery] = useState('');
-  
-    const handleChange = (e) => {
-      setQuery(e.target.value);
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (query.trim() !== '') {
-        onSubmit(query);
-        setQuery('');
-      }
-    };
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (message.trim() !== '') {
+      onSubmit(message);
+      setMessage('');
+    }
+  };
   
     return (
         <Box
@@ -32,17 +31,19 @@ const ChatInput = ({ onSubmit }) => {
           zIndex: '1',
         }}
       >
-        <TextField
-          value={query}
-          onChange={handleChange}
-          placeholder="Type your query..."
-          fullWidth
-          variant="outlined"
-          size="small"
-        />
-        <IconButton type="submit" color="primary">
-          <SendIcon />
-        </IconButton>
+       <TextField
+      type="text"
+      placeholder="Type your message..."
+      value={message}
+      onChange={handleChange}
+      fullWidth
+      variant="outlined"
+      InputProps={{
+        endAdornment: (
+          <SendIcon onClick={handleSubmit} sx={{ fontSize: '6vh' }} style={{ cursor: 'pointer'}}/>
+        ),
+      }}
+    />
       </Box>
     );
   };

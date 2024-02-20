@@ -1,8 +1,7 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState ,useEffect,useRef} from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 
 import { styled } from '@mui/material/styles'
@@ -13,9 +12,18 @@ import Button from '@mui/material/Button'
 
 // ** Icons Imports
 import Close from 'mdi-material-ui/Close'
+import CardHeader from '@mui/material/CardHeader'
+import Typography from '@mui/material/Typography';
+import SendIcon from 'mdi-material-ui/SendCircle';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField'
+import Avatar from '@mui/material/Avatar';
+import PersonIcon from 'mdi-material-ui/FaceAgent';
+import RobotIcon from 'mdi-material-ui/Robot';
+import Typist from 'react-typist';
 
 
-import ChatInput from './ChatInput';
+
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
   height: 120,
@@ -39,97 +47,168 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(4)
   }
 }))
+const StickyHeader = styled(CardHeader)({
+  position: 'sticky',
+  top: 0,
+  zIndex: 1000, // Adjust the z-index as needed
+ 
+});
+
+
+
+
+const ChatInput = ({ onSubmit }) => {
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (message.trim() !== '') {
+      onSubmit(message);
+      setMessage('');
+    }
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent default behavior of Enter key
+      handleSubmit(); // Call submit function when Enter key is pressed
+    }
+  };
+    return (
+        <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          position: 'sticky',
+          bottom: '0',
+          backgroundColor: 'white',
+          padding: '8px',
+          borderTop: '1px solid #ccc',
+          zIndex: '1',
+        }}
+      >
+       <TextField
+      type="text"
+      placeholder="Type your message..."
+      value={message}
+      onChange={handleChange}
+      fullWidth
+      variant="outlined"
+      InputProps={{
+        endAdornment: (
+          <SendIcon onClick={handleSubmit} sx={{ fontSize: '6vh' }} style={{ cursor: 'pointer'}}/>
+        ),
+      }}
+      onKeyDown={handleKeyDown}
+    />
+      </Box>
+    );
+  };
+
+  const ChatMessage = ({ sender, text ,isNew}) => {
+    const renderIcon = () => {
+      if (sender === 'You') {
+        return <Avatar><PersonIcon /></Avatar>;
+      } else if (sender != 'You') {
+        return <Avatar><RobotIcon /></Avatar>;
+      } else {
+        return null;
+      }
+    };
+  
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '22px' }}>
+        {renderIcon()}
+        {sender != 'You' ? (
+        isNew ? (
+          <Typist>
+            <span>{text}</span>
+          </Typist>
+        ) : (
+          <span>{text}</span>
+        )
+      ) : (
+        <span>{text}</span>
+      )}
+      </div>
+    );
+  };
+
+
 
 const TabAccount = () => {
-  const [queries, setQueries] = useState([]);
 
-  const handleSubmitQuery = (query) => {
-    // Here you can handle submitting the query, for now, we will just log it
-    console.log('Submitted Query:', query);
-    // Add the query to the queries state
-    setQueries([...queries, query]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isUserTyping, setIsUserTyping] = useState(false);
+  const chatContainerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   };
+
+  // Scroll to bottom whenever chatMessages or isUserTyping changes
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatMessages, isUserTyping]);
+
+  
+  useEffect(() => {
+    // Load chat messages from local storage when component mounts
+    const storedMessages = localStorage.getItem('chatMessages');
+    if (storedMessages) {
+      setChatMessages(JSON.parse(storedMessages));
+    }
+  }, []);
+
+  const handleSubmitMessage = (message) => {
+    const newMessage = { sender: 'You', text: message };
+  const updatedMessages = [...chatMessages, newMessage];
+  setChatMessages(updatedMessages);
+  setIsUserTyping(true);
+
+  // Save updated chat messages to local storage
+  localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+
+  setTimeout(() => {
+    const botResponse = { sender: 'Bot', text: `Response to: ${message}`, isNew: true };
+    const updatedMessagesWithBotResponse = [...updatedMessages, botResponse];
+    setChatMessages(updatedMessagesWithBotResponse);
+    setIsUserTyping(false);
+
+    // Save updated chat messages with bot response to local storage
+    localStorage.setItem('chatMessages', JSON.stringify(updatedMessagesWithBotResponse));
+  }, 1000);
+  };
+
+
+
 
   return (
     <>
-    <CardContent  sx={{ height: '80vh' }}>
-      
-    </CardContent>
-   {/**
-    *  <div className="px-4 pb-3">
-        <Flex align="end" justify="between" gap="3" className="relative">
-          <div className="rt-TextAreaRoot rt-r-size-1 rt-variant-surface flex-1 rounded-3xl chat-textarea">
-            <ContentEditable
-              innerRef={textAreaRef}
-              style={{
-                minHeight: '24px',
-                maxHeight: '200px',
-                overflowY: 'auto'
-              }}
-              className="rt-TextAreaInput text-base"
-              html={message}
-              disabled={isLoading}
-              onChange={(e) => {
-                setMessage(e.target.value.replace(HTML_REGULAR, ''))
-              }}
-              onKeyDown={(e) => {
-                handleKeypress(e)
-              }}
-            />
-            <div className="rt-TextAreaChrome"></div>
-          </div>
-          <Flex gap="3" className="absolute right-0 pr-4 bottom-2 pt">
-            {isLoading && (
-              <Flex
-                width="6"
-                height="6"
-                align="center"
-                justify="center"
-                style={{ color: 'var(--accent-11)' }}
-              >
-                <AiOutlineLoading3Quarters className="animate-spin size-4" />
-              </Flex>
-            )}
-            <Tooltip content={'Send Message'}>
-              <IconButton
-                variant="soft"
-                disabled={isLoading}
-                color="gray"
-                size="2"
-                className="rounded-xl cursor-pointer"
-                onClick={sendMessage}
-              >
-                <FiSend className="size-4" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip content={'Clear Message'}>
-              <IconButton
-                variant="soft"
-                color="gray"
-                size="2"
-                className="rounded-xl cursor-pointer"
-                disabled={isLoading}
-                onClick={clearMessages}
-              >
-                <AiOutlineClear className="size-4" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip content={'Toggle Sidebar'}>
-              <IconButton
-                variant="soft"
-                color="gray"
-                size="2"
-                className="rounded-xl md:hidden cursor-pointer"
-                disabled={isLoading}
-                onClick={onToggleSidebar}
-              >
-                <AiOutlineUnorderedList className="size-4" />
-              </IconButton>
-            </Tooltip>
-          </Flex>
-        </Flex>
-      </div>
-    */}
+        <CardContent sx={{ height: 'calc(100vh - 200px)' }}>
+        <Box 
+        id="chat-container" 
+        ref={chatContainerRef}
+        sx={{ height: 'calc(100vh - 200px)',width: '100%', overflowY: 'auto', padding: '10px',mb:'22px'}}>
+
+              <div style={{ width: '200px', wordWrap: 'break-word' }}>
+              {chatMessages.map((message, index) => (
+                        <ChatMessage key={index} sender={message.sender} text={message.text} />
+                      ))}
+                  {isUserTyping && (
+                <Typography variant="body1" style={{ marginTop: '10px' }}>
+                  You are typing...
+                </Typography>
+              )}
+            </div>
+       
+            
+        </Box>
+        </CardContent>
+      <ChatInput onSubmit={handleSubmitMessage} />
+    
     </>
   );
 };
