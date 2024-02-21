@@ -54,6 +54,7 @@
     "react-dom": "17.0.2",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.2.5",
+    "react-typing-text-effect": "^1.0.2",
     "react-typist": "^2.0.5"
   },
   "devDependencies": {
