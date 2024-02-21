@@ -124,35 +124,39 @@ const ChatInput = ({ onSubmit }) => {
 
           const renderIcon = () => {
             if (sender === 'You') {
-              return <Avatar alt='John Doe' src='/images/avatars/3.png' sx={{ width: '2.5rem', height: '2.5rem',borderRadius: '5px' }} />;
+              return <Avatar alt='John Doe' src='/images/avatars/3.png' sx={{ width: '2.1rem', height: '2.1rem',borderRadius: '5px' }} />;
             } else if (sender != 'You') {
-              return <Avatar alt='John Doe' src='/images/avatars/bot.png' sx={{ width: '2.5rem', height: '2.5rem',borderRadius: '5px' }} />;
+              return <Avatar alt='John Doe' src='/images/avatars/bot.png' sx={{ width: '2.1rem', height: '2.1rem',borderRadius: '5px' }} />;
             } else {
               return null;
             }
           };
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2vh',alignItems: 'flex-start',  }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2vh',alignItems: 'flex-start'  }}>
       {renderIcon()}
-      <div style={{ width: '100%',boxShadow: '0 2px 4px rgba(0,0,0,0.1)', borderRadius: '5px', border: '1px solid rgba(0,0,0,0.1)',marginLeft:'2%' }}>
+      <div style={{ width: '100%',boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+       borderRadius: '5px',
+        border: '1px solid rgba(0,0,0,0.1)',marginLeft:'1%',marginBottom:'1%' }}>
         {sender !== 'You' ? (
           isMostRecentBotMessage && isNew ? (
-            <div className="typing-effect">
+            <div className="typing-effect" sx={{padding:'5px'}}>
               <TextareaAutosize
-                value={typingText}
-                style={{
-                  width: '100%', // Full width of parent container
+                value={typingText}       
+                style={{    
+                  width: '100%', // Full width of parent container 
                   resize: 'none',
                   overflowY: 'auto',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   border: 'none', // Remove border
                   padding: '8px', // Add padding
                   boxSizing: 'border-box', // Ensure padding doesn't affect width
                   outline: 'none', // Remove outline on focus
                 }}
               />
+               
             </div>
+            
           ) : (
             <TextareaAutosize
               value={text}
@@ -161,7 +165,7 @@ const ChatInput = ({ onSubmit }) => {
                 width: '100%', // Full width of parent container
                 resize: 'none',
                 overflowY: 'auto',
-                fontSize: '16px',
+                fontSize: '14px',
                 border: 'none', // Remove border
                 padding: '8px', // Add padding
                 boxSizing: 'border-box', // Ensure padding doesn't affect width
@@ -176,8 +180,8 @@ const ChatInput = ({ onSubmit }) => {
             style={{
               width: '100%', // Full width of parent container
               resize: 'none',
-              overflowY: 'auto',
-              fontSize: '16px',
+              overflowY: 'auto', 
+              fontSize: '14px',
               border: 'none', // Remove border
               padding: '8px', // Add padding
               boxSizing: 'border-box', // Ensure padding doesn't affect width
@@ -198,25 +202,20 @@ const TabAccount = () => {
   const [isUserTyping, setIsUserTyping] = useState(false);
   const chatContainerRef = useRef(null);
   const [mostRecentBotMessageIndex, setMostRecentBotMessageIndex] = useState(-1);
+  const typingTextRef = useRef('');
 
-
+  // Function to scroll to the bottom of the chat container
   const scrollToBottom = () => {
-    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
 
-  // Scroll to bottom whenever chatMessages or isUserTyping changes
-  useEffect(() => {
+  const handleNewMessage = () => {
     scrollToBottom();
-  }, [chatMessages, isUserTyping]);
+  };
 
-  
-  useEffect(() => {
-    // Load chat messages from local storage when component mounts
-    const storedMessages = localStorage.getItem('chatMessages');
-    if (storedMessages) {
-      setChatMessages(JSON.parse(storedMessages));
-    }
-  }, []);
+
 
   const handleSubmitMessage = (message) => {
     const newMessage = { sender: 'You', text: message };
@@ -250,18 +249,34 @@ const TabAccount = () => {
       });
     };
   }, []);
+  useEffect(() => {
+    // Scroll to bottom when component mounts or chatMessages change
+    scrollToBottom();
+  }, [chatMessages]);
 
+  useEffect(() => {
+    // Scroll to bottom when chat container height changes
+    const chatContainer = chatContainerRef.current;
+    const observer = new MutationObserver(scrollToBottom);
+    if (chatContainer) {
+      observer.observe(chatContainer, { childList: true, subtree: true });
+    }
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
-        <CardContent sx={{ height: 'calc(100vh - 200px)' }}>
-        <Typography>Active Project:</Typography>
+        <CardContent sx={{ height: 'calc(100vh - 170px)' }}>
+        <Typography>Active Project: ::::</Typography>
         <Box 
         id="chat-container" 
         ref={chatContainerRef}
-        sx={{ height: 'calc(100vh - 200px)',width: '100%', overflowY: 'auto', padding: '10px',mb:'22px',mt:'20px'}}>
+        sx={{ height: 'calc(100vh - 200px)',width: '100%', overflowY: 'auto', padding: '1%',mt:'10px',
+        '&::-webkit-scrollbar': {
+          display: 'none' // Hide scrollbar for WebKit browsers
+        }}}>
 
-              <div style={{ width: '100%', wordWrap: 'break-word' }}>
+              <div style={{ width: '100%' }} ref={typingTextRef}>
               {chatMessages.map((message, index) => (
                         <ChatMessage
                         key={index}
@@ -271,17 +286,18 @@ const TabAccount = () => {
                         isMostRecentBotMessage={index === mostRecentBotMessageIndex}
                       />
                       ))}
-                  {isUserTyping && (
+                  {isUserTyping && ( 
                 <Typography variant="body1" style={{ marginTop: '10px' }}>
                   Waiting for reply...
                 </Typography>
               )}
             </div>
-       
-            
-        </Box>
+        
+           
+        </Box> 
+        
         </CardContent>
-      <ChatInput onSubmit={handleSubmitMessage} />
+        <ChatInput onSubmit={handleSubmitMessage} /> 
     
     </>
   );

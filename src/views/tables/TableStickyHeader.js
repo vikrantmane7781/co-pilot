@@ -234,8 +234,14 @@ const TableStickyHeader = () => {
             size="medium"
             type="submit"
             variant="contained"
-            style={{ backgroundColor: '#0070D2', color: 'white',marginRight:'%' }}
+            style={{ 
+            ...(!selectedRow
+              ? { backgroundColor: '#72b6f2', color: '#FFFFFF',marginRight:'4%', cursor:'not-allowed'}
+              : {
+                  backgroundColor: '#0070D2',color: 'white',marginRight:'4%',cursor: 'pointer'
+                }) }}
             onClick={handleSelectProject} 
+            disabled={!selectedRow} 
           >
             Select Project
           </Button>

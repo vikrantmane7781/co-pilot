@@ -6,7 +6,17 @@ import Box from '@mui/material/Box';
 
 const ChatInput = ({ onSubmit }) => {
   const [message, setMessage] = useState('');
+  const [textFieldRows, setTextFieldRows] = useState(1); // State to store the number of rows for TextField
+  const textFieldRef = useRef(null); // Ref to TextField element
 
+  // Function to calculate the number of rows needed based on the text content
+  const calculateRows = () => {
+    if (textFieldRef.current) {
+      const lineHeight = parseFloat(window.getComputedStyle(textFieldRef.current).lineHeight);
+      const currentRows = Math.ceil(textFieldRef.current.scrollHeight / lineHeight);
+      setTextFieldRows(currentRows);
+    }
+  };
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
@@ -29,6 +39,8 @@ const ChatInput = ({ onSubmit }) => {
           padding: '8px',
           borderTop: '1px solid #ccc',
           zIndex: '1',
+         
+          
         }}
       >
        <TextField
@@ -38,6 +50,8 @@ const ChatInput = ({ onSubmit }) => {
       onChange={handleChange}
       fullWidth
       variant="outlined"
+      rows={textFieldRows}
+      inputRef={textFieldRef}
       InputProps={{
         endAdornment: (
           <SendIcon onClick={handleSubmit} sx={{ fontSize: '6vh' }} style={{ cursor: 'pointer'}}/>
