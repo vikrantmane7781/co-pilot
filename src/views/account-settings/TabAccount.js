@@ -7,22 +7,33 @@ import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 
 import CardContent from '@mui/material/CardContent'
-
 import Button from '@mui/material/Button'
-
 // ** Icons Imports
-import Close from 'mdi-material-ui/Close'
-import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography';
 import SendIcon from 'mdi-material-ui/SendCircle';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
 import Avatar from '@mui/material/Avatar';
-import PersonIcon from 'mdi-material-ui/FaceAgent';
-import RobotIcon from 'mdi-material-ui/Robot';
+import { useTheme } from '@mui/material/styles';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
+
+
+
+const TechBox = styled(Box)({
+  display: 'inline-block',
+  padding: '4px 8px', // Adjust padding as needed
+  marginRight: '8px', // Adjust margin as needed
+  border: '1px solid #ccc', // Add border
+  borderRadius: '4px', // Add border radius
+});
 
 const ChatInput = ({ onSubmit }) => {
   const [message, setMessage] = useState('');
@@ -131,28 +142,58 @@ const ChatInput = ({ onSubmit }) => {
               return null;
             }
           };
+          const theme = useTheme();
+
+          const lightModeStyles = {
+            width: '100%',
+            resize: 'none',
+            overflowY: 'auto',
+            fontSize: '13px',
+            border: 'none', 
+            padding: '8px', 
+            boxSizing: 'border-box',
+            outline: 'none',
+          };
+        
+          // Define styles for dark mode
+          const darkModeStyles = {
+            width: '100%',
+            resize: 'none',
+            overflowY: 'auto',
+            fontSize: '13px',
+            border: 'none', 
+            padding: '8px', 
+            boxSizing: 'border-box',
+            outline: 'none',
+            color:'white',
+            backgroundColor:'#312D4B'
+          };
+          const divStyleLight={
+            width: '100%',boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            borderRadius: '5px',
+             border: '1px solid rgba(0,0,0,0.1)',marginLeft:'1%',marginBottom:'1%' 
+          }
+          const divStyleDark={
+            width: '100%',
+            borderRadius: '5px',
+             border: '1px solid rgba(0,0,0,0.1)',marginLeft:'1%',marginBottom:'1%' 
+          }
+          const styles = theme.palette.mode === 'dark' ? darkModeStyles : lightModeStyles;
+          const st= theme.palette.mode === 'dark' ? divStyleDark : divStyleLight;
+
+
 
     return (
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2vh',alignItems: 'flex-start'  }}>
       {renderIcon()}
-      <div style={{ width: '100%',boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-       borderRadius: '5px',
-        border: '1px solid rgba(0,0,0,0.1)',marginLeft:'1%',marginBottom:'1%' }}>
+      <div style={st}>
         {sender !== 'You' ? (
           isMostRecentBotMessage && isNew ? (
             <div className="typing-effect" sx={{padding:'5px'}}>
               <TextareaAutosize
+                readOnly 
                 value={typingText}       
-                style={{    
-                  width: '100%', // Full width of parent container 
-                  resize: 'none',
-                  overflowY: 'auto',
-                  fontSize: '14px',
-                  border: 'none', // Remove border
-                  padding: '8px', // Add padding
-                  boxSizing: 'border-box', // Ensure padding doesn't affect width
-                  outline: 'none', // Remove outline on focus
-                }}
+                style={styles}
               />
                
             </div>
@@ -161,32 +202,14 @@ const ChatInput = ({ onSubmit }) => {
             <TextareaAutosize
               value={text}
               readOnly
-              style={{
-                width: '100%', // Full width of parent container
-                resize: 'none',
-                overflowY: 'auto',
-                fontSize: '14px',
-                border: 'none', // Remove border
-                padding: '8px', // Add padding
-                boxSizing: 'border-box', // Ensure padding doesn't affect width
-                outline: 'none', // Remove outline on focus
-              }}
+              style={styles}
             />
           )
         ) : (
           <TextareaAutosize
             value={text}
             readOnly
-            style={{
-              width: '100%', // Full width of parent container
-              resize: 'none',
-              overflowY: 'auto', 
-              fontSize: '14px',
-              border: 'none', // Remove border
-              padding: '8px', // Add padding
-              boxSizing: 'border-box', // Ensure padding doesn't affect width
-              outline: 'none', // Remove outline on focus
-            }}
+            style={styles}
           />
         )}
       </div>
@@ -203,6 +226,15 @@ const TabAccount = () => {
   const chatContainerRef = useRef(null);
   const [mostRecentBotMessageIndex, setMostRecentBotMessageIndex] = useState(-1);
   const typingTextRef = useRef('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [projectData, setProjectData] = useState(null);
+
+
+
+  const dummyData = [
+    { name: "Internet Banking Application", tech: ['Java', 'python', 'typescript'], createdOn: 30, createdBy: 'New York' }
+    // Add more data as needed
+  ];
 
   // Function to scroll to the bottom of the chat container
   const scrollToBottom = () => {
@@ -211,11 +243,21 @@ const TabAccount = () => {
     }
   };
 
-  const handleNewMessage = () => {
-    scrollToBottom();
-  };
-
-
+  useEffect(() => {
+    // Retrieve data from session storage
+    const storedData = sessionStorage.getItem('selectedRowData');
+    if (storedData) {
+      // Parse the data if it's in string format
+      const parsedData = JSON.parse(storedData);
+      setProjectData(parsedData);
+    }
+  }, []);
+  useEffect(() => {
+    const storedMessages = JSON.parse(localStorage.getItem('chatMessages'));
+    if (storedMessages) {
+      setChatMessages(storedMessages);
+    }
+  }, []);
 
   const handleSubmitMessage = (message) => {
     const newMessage = { sender: 'You', text: message };
@@ -234,21 +276,21 @@ const TabAccount = () => {
     setIsUserTyping(false);
 
     localStorage.setItem('chatMessages', JSON.stringify(updatedMessagesWithBotResponse));
+    
   }, 1000);
   };
 
   useEffect(() => {
-    window.addEventListener('beforeunload', function() {
+    const handleBeforeUnload = (event) => {
       localStorage.clear();
-    });
-  
-    // Clean up the event listener when the component unmounts
+    };
+   // window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
-      window.removeEventListener('beforeunload', function() {
-        localStorage.clear();
-      });
+    
     };
   }, []);
+
+
   useEffect(() => {
     // Scroll to bottom when component mounts or chatMessages change
     scrollToBottom();
@@ -266,14 +308,40 @@ const TabAccount = () => {
 
   return (
     <>
-        <CardContent sx={{ height: 'calc(100vh - 170px)' }}>
-        <Typography>Active Project: ::::</Typography>
+    {projectData ? (
+        <TableContainer sx={{ padding: "10px" }}>
+          <Table sx={{ border: 'none', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <TableHead>
+              <TableRow sx={{ border: 'none' }}>
+                <TableCell sx={{ height: '7px', border: 'none', color: '#0070D2', fontSize: '10px !important', fontWeight: 'bold', width: '450px', textAlign: 'left' }}>Active Project Name </TableCell>
+                <TableCell sx={{ height: '7px', border: 'none', color: '#0070D2', fontSize: '10px !important', fontWeight: 'bold', textAlign: 'left' }}>Technologies</TableCell>
+                <TableCell sx={{ height: '7px', border: 'none', color: '#0070D2', fontSize: '10px !important', fontWeight: 'bold', width: '150px', whiteSpace: 'nowrap', textAlign: 'left' }}>Created On</TableCell>
+                <TableCell sx={{ height: '7px', border: 'none', color: '#0070D2', fontSize: '10px !important', fontWeight: 'bold', width: '150px', whiteSpace: 'nowrap', textAlign: 'left' }}>Created By</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ border: 'none' }}>
+                <TableCell sx={{ height: '7px', border: 'none', fontSize: "12px", fontWeight: 'bold' }}>{projectData.name}</TableCell>
+                <TechBox sx={{ height: '7px', border: 'none', fontSize: "12px", mt: 2.5, fontWeight: 'bold' }}>
+                  {projectData.tech.join(' | ')}
+                </TechBox>
+                <TableCell sx={{ height: '7px', border: 'none', fontSize: "12px", fontWeight: 'bold' }}>{projectData.createdOn}</TableCell>
+                <TableCell sx={{ height: '7px', border: 'none', fontSize: "12px", fontWeight: 'bold' }}>{projectData.createdBy}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '16px', fontWeight: 'bold' }}>Not Active Project</div>
+      )}
+        <CardContent sx={{ height: 'calc(100vh - 280px)' }}>
+        
         <Box 
         id="chat-container" 
         ref={chatContainerRef}
-        sx={{ height: 'calc(100vh - 200px)',width: '100%', overflowY: 'auto', padding: '1%',mt:'10px',
+        sx={{ height: 'calc(100vh - 300px)',width: '100%', overflowY: 'auto', padding: '1%',mt:'10px',
         '&::-webkit-scrollbar': {
-          display: 'none' // Hide scrollbar for WebKit browsers
+          display: 'none' 
         }}}>
 
               <div style={{ width: '100%' }} ref={typingTextRef}>
@@ -297,7 +365,7 @@ const TabAccount = () => {
         </Box> 
         
         </CardContent>
-        <ChatInput onSubmit={handleSubmitMessage} /> 
+        <ChatInput onSubmit={handleSubmitMessage} status={isUserTyping } /> 
     
     </>
   );

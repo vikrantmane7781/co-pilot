@@ -147,6 +147,8 @@ const TableStickyHeader = () => {
     // Retrieve the selected row data
     const selectedRowData = dummyData.find((row) => row.name === selectedRow);
     console.log(" ----- ",selectedRowData);
+    localStorage.clear();
+    sessionStorage.removeItem('selectedRowData');
     // Store the selected row data in session storage
     sessionStorage.setItem('selectedRowData', JSON.stringify(selectedRowData));
   };

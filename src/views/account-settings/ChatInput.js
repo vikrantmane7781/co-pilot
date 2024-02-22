@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 import SendIcon from 'mdi-material-ui/SendCircle';
 import Box from '@mui/material/Box';
 
-const ChatInput = ({ onSubmit }) => {
+const ChatInput = ({ onSubmit,status }) => {
   const [message, setMessage] = useState('');
   const [textFieldRows, setTextFieldRows] = useState(1); // State to store the number of rows for TextField
   const textFieldRef = useRef(null); // Ref to TextField element
@@ -27,7 +27,7 @@ const ChatInput = ({ onSubmit }) => {
       setMessage('');
     }
   };
-  
+  console.log("I am sttus ",status)
     return (
         <Box
         component="form"
@@ -44,6 +44,7 @@ const ChatInput = ({ onSubmit }) => {
         }}
       >
        <TextField
+       disabled={status}
       type="text"
       placeholder="Type your message..."
       value={message}
