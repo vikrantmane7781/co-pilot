@@ -32,6 +32,7 @@ const ChatInput = ({ onSubmit,status }) => {
         <Box
         component="form"
         onSubmit={handleSubmit}
+        
         sx={{
           position: 'sticky',
           bottom: '0',
