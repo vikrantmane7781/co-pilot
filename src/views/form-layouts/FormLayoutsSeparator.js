@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState,useRef } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -72,7 +72,22 @@ const FormLayoutsSeparator = () => {
     { id: "Event Management",  name: ['Java','python','typescript'] , age: 40, city: 'Chicago' },
   ];
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const projectNameRef = useRef(null);
+  const projectDescriptionRef = useRef(null);
+  const gitHubRepoRef = useRef(null);
 
+  const validateFields = () => {
+    // Check if all required fields are filled
+    if (
+      projectNameRef.current?.value === '' ||
+      projectDescriptionRef.current?.value === '' ||
+      selectedOptions.length === 0 ||
+      gitHubRepoRef.current?.value === ''
+    ) {
+      return false;
+    }
+    return true;
+  };
   const handleChange = (event) => {
     setSelectedOptions(event.target.value);
   };
@@ -83,18 +98,29 @@ const FormLayoutsSeparator = () => {
   };
 
   const handleChipClick = (event) => {
-    event.stopPropagation(); // Prevent the click event from propagating to the Select component
+    event.stopPropagation();
   };
 
   const [loading, setLoading] = useState(false); // Step 2
 
   const handleBuildRAG = () => {
-    setLoading(true); // Step 3
 
-    // Simulate asynchronous operation (e.g., API request) for a few seconds
+    if (!validateFields()) {
+      return;
+    }
     setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+      setLoading(true); // Enable loading screen after validation and before the async operation
+      // Simulate asynchronous operation (e.g., API request) for a few seconds
+      setTimeout(() => {
+        setLoading(false); // Release the loading screen after the operation is complete
+        projectNameRef.current.value = '';
+        projectDescriptionRef.current.value = '';
+        gitHubRepoRef.current.value = '';
+        setSelectedOptions([]);
+      // Show alert message or popup box
+      alert('Project successfully created!');
+      }, 3000);
+    }, 0); 
   };
 
   return (
@@ -130,7 +156,7 @@ const FormLayoutsSeparator = () => {
               label="Project Name" 
               placeholder="Please enter project name.."
               autoComplete="off"
-              
+              inputRef={projectNameRef}
             />
           </Grid>
           <Grid item xs={6} sm={12}>
@@ -148,6 +174,7 @@ const FormLayoutsSeparator = () => {
               label="Project Description" 
               placeholder="Please enter project description.."
               autoComplete="off"
+              inputRef={projectDescriptionRef}
             />
           </Grid>
           <Grid item xs={6} sm={12}>
@@ -186,9 +213,9 @@ const FormLayoutsSeparator = () => {
                   </div>
                 )}
               >
-                <MenuItem value="option1">Java</MenuItem>
-                <MenuItem value="option2">Python</MenuItem>
-                <MenuItem value="option3">C++</MenuItem>
+                <MenuItem value="Java">Java</MenuItem>
+                <MenuItem value="Python">Python</MenuItem>
+                <MenuItem value="Typescript">Typescript</MenuItem>
                 {/* Add more MenuItem components for additional options */}
               </Select>
 
@@ -208,6 +235,7 @@ const FormLayoutsSeparator = () => {
               label="GitHub Repo" 
               placeholder="Enter your GitHub repo URL here.."
               autoComplete="off"
+              inputRef={gitHubRepoRef}
             />
           </Grid>
           
@@ -219,7 +247,8 @@ const FormLayoutsSeparator = () => {
            onClick={handleBuildRAG} 
            sx={{ ml: 0 }} 
            variant='contained'
-           style={{ backgroundColor: '#0070D2', color: 'white' }}>
+           style={{ backgroundColor: '#0070D2', color: 'white' }}
+           >
             Build RAG
           </Button>
           
