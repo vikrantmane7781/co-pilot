@@ -229,12 +229,17 @@ const TabAccount = () => {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [projectData, setProjectData] = useState(null);
 
-
-
-  const dummyData = [
-    { name: "Internet Banking Application", tech: ['Java', 'python', 'typescript'], createdOn: 30, createdBy: 'New York' }
-    // Add more data as needed
-  ];
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('selectedRowData');
+    if (!storedData) {
+      localStorage.removeItem('chatMessages'); // Clear localStorage only if session data is not available
+    } else {
+      const storedMessages = JSON.parse(localStorage.getItem('chatMessages'));
+      if (storedMessages) {
+        setChatMessages(storedMessages);
+      }
+    }
+  }, []);
 
   // Function to scroll to the bottom of the chat container
   const scrollToBottom = () => {
@@ -242,7 +247,7 @@ const TabAccount = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   };
-
+  
   useEffect(() => {
     // Retrieve data from session storage
     const storedData = sessionStorage.getItem('selectedRowData');
@@ -280,15 +285,7 @@ const TabAccount = () => {
   }, 1000);
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      localStorage.clear();
-    };
-   // window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-    
-    };
-  }, []);
+  
 
 
   useEffect(() => {
@@ -306,6 +303,8 @@ const TabAccount = () => {
     return () => observer.disconnect();
   }, []);
 
+
+  
   return (
     <>
     {projectData ? (

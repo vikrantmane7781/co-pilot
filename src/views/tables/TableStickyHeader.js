@@ -146,10 +146,10 @@ const TableStickyHeader = () => {
   const handleSelectProject = () => {
     // Retrieve the selected row data
     const selectedRowData = dummyData.find((row) => row.name === selectedRow);
-    console.log(" ----- ",selectedRowData);
-    localStorage.clear();
+    
+    //localStorage.clear();
     sessionStorage.removeItem('selectedRowData');
-    // Store the selected row data in session storage
+   
     sessionStorage.setItem('selectedRowData', JSON.stringify(selectedRowData));
   };
   const CustomTableSortLabel = styled(TableSortLabel)({
