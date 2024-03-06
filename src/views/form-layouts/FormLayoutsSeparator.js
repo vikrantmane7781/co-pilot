@@ -30,6 +30,9 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
 
 
 const CustomInput = forwardRef((props, ref) => {
@@ -62,6 +65,35 @@ const TechBox = styled(Box)({
   border: '1px solid #ccc', // Add border
   borderRadius: '4px', // Add border radius
 });
+
+
+
+const CustomSnackbar = ({ open, message, onClose }) => {
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={6000}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'center', horizontal: 'center' }} // Align Snackbar to the center
+     
+      style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',backdropFilter: 'blur(8px)' }} // Center the Snackbar
+    >
+      <MuiAlert
+        onClose={onClose}
+        severity="success"
+        sx={{
+          width: 'fit-content',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)', // Set translucent white background color
+          color: 'black', // Set black text color
+          borderRadius: '8px', // Add border radius
+
+        }}
+      >
+        {message}
+      </MuiAlert>
+    </Snackbar>
+  );
+};
 const FormLayoutsSeparator = () => {
   
   const theme = useTheme();
@@ -75,7 +107,11 @@ const FormLayoutsSeparator = () => {
   const projectNameRef = useRef(null);
   const projectDescriptionRef = useRef(null);
   const gitHubRepoRef = useRef(null);
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   const validateFields = () => {
     // Check if all required fields are filled
     if (
@@ -118,7 +154,9 @@ const FormLayoutsSeparator = () => {
         gitHubRepoRef.current.value = '';
         setSelectedOptions([]);
       // Show alert message or popup box
-      alert('Project successfully created!');
+      //alert('Project successfully created!');
+      setSnackbarMessage('Project successfully created!');
+        setSnackbarOpen(true);
       }, 3000);
     }, 0); 
   };
@@ -258,7 +296,17 @@ const FormLayoutsSeparator = () => {
       </form>
      
     </Card>
-    
+    <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        onClose={handleSnackbarClose}
+      />
+
+      {/* Add a backdrop for background blur */}
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={snackbarOpen}
+      />
     <StickyHeaderCard sx={{mt:2,height: '50vh',overflowY: 'auto',padding:'25px'}}>
       
      <StickyHeader title="Recent created projects.." titleTypographyProps={{ variant: 'h6' }}sx={{ marginLeft: '20px' }}/>

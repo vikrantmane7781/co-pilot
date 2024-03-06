@@ -54,7 +54,7 @@ const App = props => {
       <Head>
         <title>{`${themeConfig.templateName} `}</title>
         <meta
-          name='description'
+          name='description' 
           content={`${themeConfig.templateName}`}
         />
         <meta name='keywords' content='Material Design' />

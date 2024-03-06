@@ -15,7 +15,7 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
 import Table from 'src/views/dashboard/Table'
-import FormLayoutsSeparator from 'src/views/form-layouts/FormLayoutsSeparator'
+import FormLayoutsSeparator from 'src/views/form-layouts/FormLayoutsSeparator' 
 const Dashboard = () => {
   return (
     <ApexChartWrapper>

@@ -242,7 +242,7 @@ const TabAccount = () => {
   }, []);
 
   // Function to scroll to the bottom of the chat container
-  const scrollToBottom = () => {
+  const scrollToBottom = () => {  
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
